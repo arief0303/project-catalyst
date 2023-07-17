@@ -6,6 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar } from '@14islands/r3f-scroll-rig'
 import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls } from '@react-three/drei'
 import * as THREE from 'three'
+import {Model} from '../components/Untitled'
 
 // Need to start preloading assets to make sure Loader
 // is not removed before the canvas children mounts
@@ -67,13 +68,13 @@ function ScrollSection() {
     <section>
       <div ref={el} className="Placeholder ScrollScene"></div>
       <UseCanvas>
-        <ScrollScene track={el}>{(props) => <Model {...props} />}</ScrollScene>
+        <ScrollScene track={el}>{(props) => <ModelView {...props} />}</ScrollScene>
       </UseCanvas>
     </section>
   )
 }
 
-function Model({ scale, scrollState }) {
+function ModelView({ scale, scrollState }) {
   const mesh = useRef()
   const model = useLoader(GLTFLoader, "/untitled.glb");
   const [color, setColor] = useState("red");
@@ -94,12 +95,12 @@ function Model({ scale, scrollState }) {
   })
   return (
     <group scale={scale.xy.min() * 0.5}>
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={100} />
       <mesh ref={mesh}>
-        {/* <boxGeometry /> */}
+        <boxGeometry />
         <meshNormalMaterial />
-
-        <primitive color={color} object={model.scene} scale={0.4} />
+        <Model scale={0.4} />
+        {/* <primitive color={color} object={model.scene} scale={0.4} /> */}
       </mesh>
     </group>
   )
