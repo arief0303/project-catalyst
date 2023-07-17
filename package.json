@@ -15,6 +15,9 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "@14islands/r3f-scroll-rig": "^8.11.11",
+    "@react-three/fiber": "^8.13.5",
+    "@types/three": "^0.154.0",
     "autoprefixer": "^10.4.14",
     "gatsby": "^5.11.0",
     "gatsby-plugin-image": "^3.11.0",
@@ -25,6 +28,7 @@
     "postcss": "^8.4.26",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.3",
+    "three": "^0.154.0"
   }
 }
