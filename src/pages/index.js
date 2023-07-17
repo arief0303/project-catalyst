@@ -1,31 +1,105 @@
 import * as React from "react"
 import { useRef, useEffect, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { ScrollScene, UseCanvas, SmoothScrollbar } from '@14islands/r3f-scroll-rig'
-import { MeshDistortMaterial, GradientTexture } from '@react-three/drei'
+import { useFrame, useLoader } from '@react-three/fiber'
+import { OrbitControls, useGLTF } from '@react-three/drei'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar } from '@14islands/r3f-scroll-rig'
+import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls } from '@react-three/drei'
+import * as THREE from 'three'
 
-function SpinningBoxSection() {
+// Need to start preloading assets to make sure Loader
+// is not removed before the canvas children mounts
+useGLTF.preload('/untitled.glb')
+
+const ViewportDemo = () => {
+  const el = useRef()
+  return (
+    <>
+      <div ref={el} className="Placeholder ViewportScrollScene" style={{ touchAction: 'pan-x' }}></div>
+      <UseCanvas>
+        <ViewportDemoWebGL el={el} />
+      </UseCanvas>
+    </>
+  )
+}
+
+const ViewportDemoWebGL = ({ el }) => {
+  return (
+    /* Disable hideOffscreen to avoid jank */
+    <ViewportScrollScene track={el} hideOffscreen={false}>
+      {(props) => (
+        <>
+          <PivotControls scale={1.5} depthTest={true} lineWidth={2.5} disableSliders>
+            <mesh position-y={0.5}>
+              <boxGeometry />
+              <MeshTransmissionMaterial
+                chromaticAberration={1}
+                thickness={0.3}
+                transmission={1}
+                anisotropy={0.5}
+                distortion={5}
+                distortionScale={1.5}
+                temporalDistortion={0.1}
+                metalness={0.1}
+                backside
+                resolution={256}
+                backsideResolution={256}
+              />
+            </mesh>
+          </PivotControls>
+          <Grid position={[0, 0.0, 0]} args={[30, 30]} scale={0.5} fadeDistance={14} />
+          <Environment preset="dawn" />
+          <color args={[0x088]} attach="background" />
+          <PerspectiveCamera fov={14} position={[6, 8, 6]} makeDefault onUpdate={(self) => self.lookAt(0, 0, 0)} />
+          {/* OrbitControls add touchAction='none' to the canvas eventSource and never removes it after events.connected changes it 
+              - need to manually pass in tracked domElement to keep touch scrolling working */}
+          {/* <OrbitControls domElement={props.track.current} makeDefault enableZoom={false} /> */}
+          <CameraControls makeDefault />
+        </>
+      )}
+    </ViewportScrollScene>
+  )
+}
+
+function ScrollSection() {
   const el = useRef()
   return (
     <section>
       <div ref={el} className="Placeholder ScrollScene"></div>
       <UseCanvas>
-        <ScrollScene track={el}>{(props) => <SpinningBoxWebGL {...props} />}</ScrollScene>
+        <ScrollScene track={el}>{(props) => <Model {...props} />}</ScrollScene>
       </UseCanvas>
     </section>
   )
 }
 
-function SpinningBoxWebGL({ scale, scrollState }) {
+function Model({ scale, scrollState }) {
   const mesh = useRef()
-  useFrame(() => {
+  const model = useLoader(GLTFLoader, "/untitled.glb");
+  const [color, setColor] = useState("red");
+
+  // Here's the animation part
+  // ************************* 
+  let mixer
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach(clip => {
+      const action = mixer.clipAction(clip)
+      action.play();
+    });
+  }
+  useFrame((state, delta) => {
     mesh.current.rotation.y = scrollState.progress * Math.PI * 2
+    mixer?.update(delta)
   })
   return (
     <group scale={scale.xy.min() * 0.5}>
+      <ambientLight intensity={0.5} />
       <mesh ref={mesh}>
-        <boxGeometry />
+        {/* <boxGeometry /> */}
         <meshNormalMaterial />
+
+        <primitive color={color} object={model.scene} scale={0.4} />
       </mesh>
     </group>
   )
@@ -39,16 +113,16 @@ const IndexPage = () => {
   }, [])
   return (
     <>
-    <SmoothScrollbar>
-      {(bind) => (
-        <article {...bind}>
-          <header>
-            <h1>Project Catalyst</h1>
-          </header>
-          <section>
-            <h1>Basic &lt;ScrollScene/&gt; example</h1>
-          </section>
-          {isTouch && (
+      <SmoothScrollbar>
+        {(bind) => (
+          <article {...bind}>
+            <header>
+              <h1>Project Catalyst</h1>
+            </header>
+            <section>
+              <h1>Basic &lt;ScrollScene/&gt; example</h1>
+            </section>
+            {isTouch && (
               <section>
                 <p style={{ color: 'orange' }}>
                   You are on a touch device which means the WebGL won't sync with the native scroll. Consider disabling ScrollScenes for
@@ -56,11 +130,12 @@ const IndexPage = () => {
                 </p>
               </section>
             )}
-          <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section>
-          <SpinningBoxSection />
-        </article>
-      )}
-    </SmoothScrollbar>
+            <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section>
+            <ViewportDemo />
+            <ScrollSection />
+          </article>
+        )}
+      </SmoothScrollbar>
     </>
   )
 }
