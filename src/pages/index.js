@@ -90,15 +90,15 @@ function ModelView({ scale, scrollState }) {
     });
   }
   useFrame((state, delta) => {
-    mesh.current.rotation.y = scrollState.progress * Math.PI * 2
+    // mesh.current.rotation.y = scrollState.progress * Math.PI * 2
     mixer?.update(delta)
   })
   return (
     <group scale={scale.xy.min() * 0.5}>
       <ambientLight intensity={100} />
+      <Environment preset="dawn" />
+
       <mesh ref={mesh}>
-        <boxGeometry />
-        <meshNormalMaterial />
         <Model scale={0.4} />
         {/* <primitive color={color} object={model.scene} scale={0.4} /> */}
       </mesh>

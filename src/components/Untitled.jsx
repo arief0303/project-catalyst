@@ -11,7 +11,7 @@ export function Model(props) {
   const { nodes, materials, animations } = useGLTF('/untitled.glb')
   const { actions } = useAnimations(animations, group)
   useEffect(() => {
-    console.log('animations', animations)
+    // console.log('animations', animations)
     actions.KeyAction.play()
  });
   return (
