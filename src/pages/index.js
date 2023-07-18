@@ -1,12 +1,16 @@
 import * as React from "react"
 import { useRef, useEffect, useState } from 'react'
-import { useFrame, useLoader } from '@react-three/fiber'
+import { useFrame, useLoader, extend } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar } from '@14islands/r3f-scroll-rig'
-import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls, Text3D, Text } from '@react-three/drei'
+import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls, Text, Text3D } from '@react-three/drei'
 import * as THREE from 'three'
 import { Model } from '../components/Untitled'
+import myFont from '../assets/fonts/XYBER_Regular.json'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
+extend({ TextGeometry })
 
 const ViewportDemo = () => {
   const el = useRef()
@@ -20,7 +24,23 @@ const ViewportDemo = () => {
   )
 }
 
+const TitleText = ({ el }) => {
+  let size
+  let font = "static/fonts/XYBER - Regular.otf"
+
+  //if on mobile, resize text
+  if (window.innerWidth < 600) {
+    size = 0.35
+  } else {
+    size = 0.7
+  }
+
+  return <Text font={font} fontSize={size}>Catalyst</Text>
+}
+
 const ViewportDemoWebGL = ({ el }) => {
+  
+
   return (
     /* Disable hideOffscreen to avoid jank */
     <ViewportScrollScene track={el} hideOffscreen={false}>
@@ -28,7 +48,9 @@ const ViewportDemoWebGL = ({ el }) => {
         <>
           <mesh position-y={0.5}>
             {/* <boxGeometry /> */}
-            <Model rotation={[0, 5, 0]} scale={0.4} />
+            <TitleText />
+
+            <Model rotation={[0, 180, 0]} scale={0.4} />
 
             <MeshTransmissionMaterial
               chromaticAberration={1}
@@ -45,7 +67,7 @@ const ViewportDemoWebGL = ({ el }) => {
             />
           </mesh>
           <Environment preset="dawn" />
-          <PerspectiveCamera fov={14} position={[6, 8, 6]} makeDefault onUpdate={(self) => self.lookAt(0, 0, 0)} />
+          <PerspectiveCamera fov={14} position={[0, 0, 20]} makeDefault onUpdate={(self) => self.lookAt(0, 0, 0)} />
           {/* OrbitControls add touchAction='none' to the canvas eventSource and never removes it after events.connected changes it 
               - need to manually pass in tracked domElement to keep touch scrolling working */}
           {/* <OrbitControls domElement={props.track.current} makeDefault enableZoom={false} /> */}
@@ -67,13 +89,13 @@ const IndexPage = () => {
       <SmoothScrollbar>
         {(bind) => (
           <article {...bind}>
-            <header>
+            {/* <header>
               <h1>Project Catalyst</h1>
             </header>
             <section>
               <h1>Basic &lt;ScrollScene/&gt; example</h1>
-            </section>
-            {isTouch && (
+            </section> */}
+            {/* {isTouch && (
               <section>
                 <p style={{ color: 'orange' }}>
                   You are on a touch device which means the WebGL won't sync with the native scroll. Consider disabling ScrollScenes for
@@ -81,8 +103,53 @@ const IndexPage = () => {
                 </p>
               </section>
             )}
-            <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section>
+            <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section> */}
             <ViewportDemo />
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
             <p>&nbsp;</p>
             <p>&nbsp;</p>
             <p>&nbsp;</p>
