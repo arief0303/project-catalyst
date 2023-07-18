@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.8 untitled.glb
 */
 
 import React, { useRef, useEffect } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import { useGLTF, useAnimations, MeshTransmissionMaterial } from '@react-three/drei'
 
 export function Model(props) {
   const group = useRef()
@@ -18,6 +18,19 @@ export function Model(props) {
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <mesh name="Icosphere" geometry={nodes.Icosphere.geometry} material={materials['Material.001']} morphTargetDictionary={nodes.Icosphere.morphTargetDictionary} morphTargetInfluences={nodes.Icosphere.morphTargetInfluences}>
+        <MeshTransmissionMaterial
+                chromaticAberration={1}
+                thickness={0.3}
+                transmission={1}
+                anisotropy={0.5}
+                distortion={5}
+                distortionScale={1.5}
+                temporalDistortion={0.1}
+                metalness={0.1}
+                backside
+                resolution={256}
+                backsideResolution={256}
+              />
         </mesh>
       </group>
     </group>

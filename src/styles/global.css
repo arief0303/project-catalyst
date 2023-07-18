@@ -72,15 +72,13 @@
   .ScrollScene,
   .ViewportScrollScene {
     /* outline: 1px dashed rgba(255, 255, 255, 0.33); */
-    position: relative;
-  }
-
-  .Title {
+    /* position: relative; */
     position: absolute;
-    width: 100vw;
-    height: 100vh;
     top: 0;
-    right: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: -999;
   }
 
   .ScrollScene:after,
