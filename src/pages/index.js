@@ -4,9 +4,9 @@ import { useFrame, useLoader } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar } from '@14islands/r3f-scroll-rig'
-import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls } from '@react-three/drei'
+import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls, Text3D, Text } from '@react-three/drei'
 import * as THREE from 'three'
-import {Model} from '../components/Untitled'
+import { Model } from '../components/Untitled'
 
 const ViewportDemo = () => {
   const el = useRef()
@@ -73,18 +73,18 @@ function ScrollSection() {
 function ModelView({ scale, scrollState }) {
   const mesh = useRef()
   // const model = useLoader(GLTFLoader, "/untitled.glb");
-/*   const [color, setColor] = useState("red");
-
-  // Here's the animation part
-  // ************************* 
-  let mixer
-  if (model.animations.length) {
-    mixer = new THREE.AnimationMixer(model.scene);
-    model.animations.forEach(clip => {
-      const action = mixer.clipAction(clip)
-      action.play();
-    });
-  } */
+  /*   const [color, setColor] = useState("red");
+  
+    // Here's the animation part
+    // ************************* 
+    let mixer
+    if (model.animations.length) {
+      mixer = new THREE.AnimationMixer(model.scene);
+      model.animations.forEach(clip => {
+        const action = mixer.clipAction(clip)
+        action.play();
+      });
+    } */
   useFrame((state, delta) => {
     // mesh.current.rotation.y = scrollState.progress * Math.PI * 2
     // mixer?.update(delta)
@@ -92,9 +92,14 @@ function ModelView({ scale, scrollState }) {
   return (
     <group scale={scale.xy.min() * 0.5}>
       <Environment preset="dawn" />
-
       <mesh ref={mesh}>
-        <Model scale={0.4} rotation={[0, 180, 0]} />
+        {/* <Text3D font="./fonts/helvetiker_regular.typeface.json">
+          Portfolio
+        </Text3D> */}
+        {/* <Text scale={0.4} color={'white'}>
+          Portfolio
+        </Text> */}
+        <Model rotation={[0, 180, 0]} position={[1, 0, 0]} scale={0.4} />
         {/* <primitive color={color} object={model.scene} scale={0.4} /> */}
       </mesh>
     </group>
@@ -129,6 +134,19 @@ const IndexPage = () => {
             <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section>
             <ScrollSection />
             <ViewportDemo />
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
           </article>
         )}
       </SmoothScrollbar>
