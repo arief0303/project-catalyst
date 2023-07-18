@@ -8,10 +8,6 @@ import { PivotControls, MeshTransmissionMaterial, Grid, Environment, Perspective
 import * as THREE from 'three'
 import {Model} from '../components/Untitled'
 
-// Need to start preloading assets to make sure Loader
-// is not removed before the canvas children mounts
-useGLTF.preload('/untitled.glb')
-
 const ViewportDemo = () => {
   const el = useRef()
   return (
@@ -66,7 +62,7 @@ function ScrollSection() {
   const el = useRef()
   return (
     <section>
-      <div ref={el} className="Placeholder ScrollScene"></div>
+      <div ref={el} className="Placeholder ScrollScene Title"></div>
       <UseCanvas>
         <ScrollScene track={el}>{(props) => <ModelView {...props} />}</ScrollScene>
       </UseCanvas>
@@ -76,8 +72,8 @@ function ScrollSection() {
 
 function ModelView({ scale, scrollState }) {
   const mesh = useRef()
-  const model = useLoader(GLTFLoader, "/untitled.glb");
-  const [color, setColor] = useState("red");
+  // const model = useLoader(GLTFLoader, "/untitled.glb");
+/*   const [color, setColor] = useState("red");
 
   // Here's the animation part
   // ************************* 
@@ -88,18 +84,17 @@ function ModelView({ scale, scrollState }) {
       const action = mixer.clipAction(clip)
       action.play();
     });
-  }
+  } */
   useFrame((state, delta) => {
     // mesh.current.rotation.y = scrollState.progress * Math.PI * 2
-    mixer?.update(delta)
+    // mixer?.update(delta)
   })
   return (
     <group scale={scale.xy.min() * 0.5}>
-      <ambientLight intensity={100} />
       <Environment preset="dawn" />
 
       <mesh ref={mesh}>
-        <Model scale={0.4} />
+        <Model scale={0.4} rotation={[0, 180, 0]} />
         {/* <primitive color={color} object={model.scene} scale={0.4} /> */}
       </mesh>
     </group>
@@ -132,8 +127,8 @@ const IndexPage = () => {
               </section>
             )}
             <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section>
-            <ViewportDemo />
             <ScrollSection />
+            <ViewportDemo />
           </article>
         )}
       </SmoothScrollbar>

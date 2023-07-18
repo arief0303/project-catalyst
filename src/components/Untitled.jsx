@@ -13,11 +13,12 @@ export function Model(props) {
   useEffect(() => {
     // console.log('animations', animations)
     actions.KeyAction.play()
- });
+  });
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
-        <mesh name="Icosphere" geometry={nodes.Icosphere.geometry} material={materials['Material.001']} morphTargetDictionary={nodes.Icosphere.morphTargetDictionary} morphTargetInfluences={nodes.Icosphere.morphTargetInfluences} />
+        <mesh name="Icosphere" geometry={nodes.Icosphere.geometry} material={materials['Material.001']} morphTargetDictionary={nodes.Icosphere.morphTargetDictionary} morphTargetInfluences={nodes.Icosphere.morphTargetInfluences}>
+        </mesh>
       </group>
     </group>
   )
