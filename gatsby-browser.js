@@ -4,7 +4,7 @@ import "./src/styles/global.css"
 
 export const wrapRootElement = ({ element }) => (
   <>
-    <GlobalCanvas />
+    <GlobalCanvas style={{ zIndex: -1 }} />
     {element}
   </>
 )
