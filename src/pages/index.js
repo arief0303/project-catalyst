@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useRef, useEffect, useState } from 'react'
-import { useFrame, useLoader, extend } from '@react-three/fiber'
+import { useFrame, useLoader, extend, useThree } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar, useTracker } from '@14islands/r3f-scroll-rig'
@@ -12,6 +12,8 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import '@14islands/r3f-scroll-rig/css'
 import { useTrackerMotionValue } from '../components/useTrackerMotionValue'
 import { motion, useTransform } from 'framer-motion'
+import { WaveMaterial } from '../components/WaveMaterial'
+import { easing } from 'maath'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 extend({ TextGeometry })
 
@@ -38,6 +40,9 @@ const ViewportDemoWebGL = ({ el }) => {
           <mesh position-y={0.5}>
             {/* <boxGeometry /> */}
             <TitleText />
+
+            <ShaderPlane />
+
 
             <Model rotation={[0, 180, 0]} scale={0.4} />
 
@@ -79,6 +84,21 @@ const TitleText = ({ el }) => {
   }
 
   return <Text font={font} fontSize={size}>Catalyst</Text>
+}
+
+function ShaderPlane() {
+  const ref = useRef()
+  const { viewport, size } = useThree()
+  useFrame((state, delta) => {
+    ref.current.time += delta
+    easing.damp3(ref.current.pointer, state.pointer, 0.2, delta)
+  })
+  return (
+    <mesh scale={[viewport.width * 2, viewport.height * 2, 1]}>
+      <planeGeometry />
+      <waveMaterial ref={ref} key={WaveMaterial.key} resolution={[size.width * viewport.dpr, size.height * viewport.dpr]} />
+    </mesh>
+  )
 }
 
 function HorizontalMarquee() {

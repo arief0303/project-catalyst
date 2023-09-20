@@ -51,7 +51,8 @@
   }
   
   section {
-    margin: 14vw 0 14vw;
+    /* margin: 14vw 0 14vw; */
+    margin: 0;
   }
   h1 {
     font-size: 5vw;
@@ -121,7 +122,7 @@
   }
   
   article {
-    padding: 3vw 0vw 0;
+    /* padding: 3vw 0vw 0; */
   }
   
   header {
@@ -134,11 +135,7 @@
     fill: white;
     height: 20px;
   }
-  
-  section {
-    margin: 14vw 0 14vw;
-    padding: 0 5vw;
-  }
+
   h1 {
     font-size: 5vw;
     font-weight: 400;
@@ -230,7 +227,7 @@
     background: rgba(255, 255, 255, 0.33);
     color: black;
     font-size: 10px;
-    padding: 5px;
+    /* padding: 5px; */
   }
 
   /* .ViewportScrollScene:after {
