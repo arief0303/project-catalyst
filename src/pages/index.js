@@ -1,10 +1,10 @@
 import * as React from "react"
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import { useFrame, useLoader, extend, useThree } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar, useTracker } from '@14islands/r3f-scroll-rig'
-import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls, Text, Text3D } from '@react-three/drei'
+import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls, Text, Text3D, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { Model } from '../components/Untitled'
 import myFont from '../assets/fonts/XYBER_Regular.json'
@@ -14,8 +14,53 @@ import { useTrackerMotionValue } from '../components/useTrackerMotionValue'
 import { motion, useTransform } from 'framer-motion'
 import { WaveMaterial } from '../components/WaveMaterial'
 import { easing } from 'maath'
+import axios from "axios";
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 extend({ TextGeometry })
+
+const ShaderPlane = ({ vertex, fragment }) => {
+  const meshRef = useRef();
+
+  // Load the noise texture and update the shader uniform
+  const noiseTexture = useTexture("noise2.png");
+  useFrame((state) => {
+    let time = state.clock.getElapsedTime();
+
+    // start from 20 to skip first 20 seconds ( optional )
+    meshRef.current.material.uniforms.iTime.value = time + 20;
+  });
+
+  // Define the shader uniforms with memoization to optimize performance
+  const uniforms = useMemo(
+    () => ({
+      iTime: {
+        type: "f",
+        value: 1.0,
+      },
+      iResolution: {
+        type: "v2",
+        value: new THREE.Vector2(4, 3),
+      },
+      iChannel0: {
+        type: "t",
+        value: noiseTexture,
+      },
+    }),
+    []
+  );
+
+  return (
+    <mesh ref={meshRef}>
+      <planeGeometry args={[4, 3]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        vertexShader={vertex}
+        fragmentShader={fragment}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+};
 
 const ViewportDemo = () => {
   const el = useRef()
@@ -32,6 +77,20 @@ const ViewportDemo = () => {
 }
 
 const ViewportDemoWebGL = ({ el }) => {
+  // State variables to store the vertex and fragment shaders as strings
+  const [vertex, setVertex] = useState("");
+  const [fragment, setFragment] = useState("");
+
+  // Fetch the shaders once the component mounts
+  useEffect(() => {
+    // fetch the vertex and fragment shaders from public folder 
+    axios.get("/vertexShader.glsl").then((res) => setVertex(res.data));
+    axios.get("/fragmentShader.glsl").then((res) => setFragment(res.data));
+  }, []);
+
+  // If the shaders are not loaded yet, return null (nothing will be rendered)
+  if (vertex == "" || fragment == "") return null;
+
   return (
     /* Disable hideOffscreen to avoid jank */
     <ViewportScrollScene track={el} hideOffscreen={false}>
@@ -41,8 +100,7 @@ const ViewportDemoWebGL = ({ el }) => {
             {/* <boxGeometry /> */}
             <TitleText />
 
-            <ShaderPlane />
-
+            <ShaderPlane vertex={vertex} fragment={fragment} />
 
             <Model rotation={[0, 180, 0]} scale={0.4} />
 
@@ -86,7 +144,7 @@ const TitleText = ({ el }) => {
   return <Text font={font} fontSize={size}>Catalyst</Text>
 }
 
-function ShaderPlane() {
+/* function ShaderPlane() {
   const ref = useRef()
   const { viewport, size } = useThree()
   useFrame((state, delta) => {
@@ -99,7 +157,7 @@ function ShaderPlane() {
       <waveMaterial ref={ref} key={WaveMaterial.key} resolution={[size.width * viewport.dpr, size.height * viewport.dpr]} />
     </mesh>
   )
-}
+} */
 
 function HorizontalMarquee() {
   const el = useRef()
