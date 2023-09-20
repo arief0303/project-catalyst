@@ -8,11 +8,11 @@ import { useGLTF, useAnimations, MeshTransmissionMaterial } from '@react-three/d
 
 export function Model(props) {
   const group = useRef()
-  const { nodes, materials, animations } = useGLTF('/untitled.glb')
+  const { nodes, materials, animations } = useGLTF('/models/untitled.glb')
   const { actions } = useAnimations(animations, group)
   useEffect(() => {
     // console.log('animations', animations)
-    actions.KeyAction.play()
+    // actions.KeyAction.play()
   });
   return (
     <group ref={group} {...props} dispose={null}>
@@ -37,4 +37,4 @@ export function Model(props) {
   )
 }
 
-useGLTF.preload('/untitled.glb')
+useGLTF.preload('/models/untitled.glb')

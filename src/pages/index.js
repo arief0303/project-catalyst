@@ -26,7 +26,7 @@ const ViewportDemo = () => {
 
 const TitleText = ({ el }) => {
   let size
-  let font = "static/fonts/XYBER - Regular.otf"
+  let font = "/fonts/XYBER - Regular.otf"
 
   //if on mobile, resize text
   if (window.innerWidth < 600) {
