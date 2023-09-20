@@ -3,12 +3,15 @@ import { useRef, useEffect, useState } from 'react'
 import { useFrame, useLoader, extend } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar } from '@14islands/r3f-scroll-rig'
+import { GlobalCanvas, ViewportScrollScene, ScrollScene, UseCanvas, SmoothScrollbar, useTracker } from '@14islands/r3f-scroll-rig'
 import { PivotControls, MeshTransmissionMaterial, Grid, Environment, PerspectiveCamera, CameraControls, Text, Text3D } from '@react-three/drei'
 import * as THREE from 'three'
 import { Model } from '../components/Untitled'
 import myFont from '../assets/fonts/XYBER_Regular.json'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+import '@14islands/r3f-scroll-rig/css'
+import { useTrackerMotionValue } from '../components/useTrackerMotionValue'
+import { motion, useTransform } from 'framer-motion'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 extend({ TextGeometry })
 
@@ -16,31 +19,17 @@ const ViewportDemo = () => {
   const el = useRef()
   return (
     <>
-      <div ref={el} className="Placeholder ViewportScrollScene" style={{ touchAction: 'pan-x' }}></div>
-      <UseCanvas>
-        <ViewportDemoWebGL el={el} />
-      </UseCanvas>
+      <section ref={el} className="TitleArea Debug">
+        <div ref={el} className="Placeholder ViewportScrollScene" style={{ touchAction: 'pan-x' }}></div>
+        <UseCanvas>
+          <ViewportDemoWebGL el={el} />
+        </UseCanvas>
+      </section>
     </>
   )
 }
 
-const TitleText = ({ el }) => {
-  let size
-  let font = "/fonts/XYBER - Regular.otf"
-
-  //if on mobile, resize text
-  if (window.innerWidth < 600) {
-    size = 0.35
-  } else {
-    size = 0.7
-  }
-
-  return <Text font={font} fontSize={size}>Catalyst</Text>
-}
-
 const ViewportDemoWebGL = ({ el }) => {
-  
-
   return (
     /* Disable hideOffscreen to avoid jank */
     <ViewportScrollScene track={el} hideOffscreen={false}>
@@ -78,6 +67,54 @@ const ViewportDemoWebGL = ({ el }) => {
   )
 }
 
+const TitleText = ({ el }) => {
+  let size
+  let font = "/fonts/XYBER - Regular.otf"
+
+  //if on mobile, resize text
+  if (window.innerWidth < 600) {
+    size = 0.35
+  } else {
+    size = 0.7
+  }
+
+  return <Text font={font} fontSize={size}>Catalyst</Text>
+}
+
+function HorizontalMarquee() {
+  const el = useRef()
+  const tracker = useTracker(el)
+  const progress = useTrackerMotionValue(tracker)
+
+  const x = useTransform(progress, [0, 1], ['0vw', '-50vw'])
+
+  return (
+    <section ref={el} className="Marquee Debug">
+      <motion.div style={{ x }}>
+        <h1>TEXT BIG TEXT BIG TEXT</h1>
+      </motion.div>
+    </section>
+  )
+}
+
+function VerticalParallax({ children }) {
+  const el = useRef()
+  const tracker = useTracker(el)
+  const progress = useTrackerMotionValue(tracker)
+
+  const textY = useTransform(progress, [0, 1], ['25%', '-25%'])
+  const imageY = useTransform(progress, [0, 1], ['-25vh', '25vh'])
+
+  return (
+    <section ref={el} className="VerticalParallax Debug">
+      <motion.div className="VerticalParallaxMotion" style={{ y: textY }}>
+        <h2>{children}</h2>
+      </motion.div>
+      <motion.div className="Image" style={{ y: imageY }}></motion.div>
+    </section>
+  )
+}
+
 const IndexPage = () => {
   const [isTouch, setTouch] = useState(false)
   useEffect(() => {
@@ -89,6 +126,32 @@ const IndexPage = () => {
       <SmoothScrollbar>
         {(bind) => (
           <article {...bind}>
+            <ViewportDemo />
+
+            {/* <header>@14islands/r3f-scroll-rig + Framer Motion</header> */}
+
+            <section>
+              {/* <h1>HTML parallax with useTracker() and Framer Motion</h1> */}
+            </section>
+
+            <section>
+              {/* <p>
+                The <code>useTracker()</code> can be used by regular HTML components to get their progress through the viewport.
+              </p> */}
+            </section>
+
+            {/* <section>&nbsp;</section> */}
+
+
+            <VerticalParallax>Vertical Text</VerticalParallax>
+
+            <section>
+              <p>In this example, we take the scroll progress from the tracker and feed it into a MotionValue.</p>
+            </section>
+
+            <HorizontalMarquee>R3F Scroll Rig</HorizontalMarquee>
+
+            <section>&nbsp;</section>
             {/* <header>
               <h1>Project Catalyst</h1>
             </header>
@@ -104,65 +167,8 @@ const IndexPage = () => {
               </section>
             )}
             <section>Both these ScrollScenes are tracking DOM elements and scaling their WebGL meshes to fit.</section> */}
-            <ViewportDemo />
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
+
+            <section>&nbsp;</section>
           </article>
         )}
       </SmoothScrollbar>
